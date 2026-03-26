@@ -4,13 +4,13 @@ install:
 	pip install -r requirements.txt
 
 start:
-	python app.py
+	PYTHONPATH=. python src/app.py
 
 test:
-	pytest
+	PYTHONPATH=. pytest tests/
 
 lint:
-	flake8 .
+	flake8 src/ tests/
 
 format:
-	black .
+	black src/ tests/
