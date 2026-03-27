@@ -7,7 +7,7 @@ start:
 	PYTHONPATH=. python src/app.py
 
 test:
-	PYTHONPATH=. pytest tests/
+	PYTHONPATH=. pytest --cov=src tests/
 
 lint:
 	flake8 src/ tests/

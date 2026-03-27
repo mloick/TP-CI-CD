@@ -215,3 +215,31 @@ def test_search_students(client):
 def test_search_students_missing_query(client):
     res = client.get("/students/search")
     assert res.status_code == 400
+
+
+# 21. GET /students (Pagination)
+def test_get_students_pagination(client):
+    # Add enough students to paginate
+    # We already have 5, so page 1 limit 2 should return 2 students
+    res = client.get("/students?page=1&limit=2")
+    assert res.status_code == 200
+    data = res.get_json()
+    assert len(data) == 2
+    assert data[0]["id"] == 1
+    assert data[1]["id"] == 2
+
+    res2 = client.get("/students?page=3&limit=2")
+    assert res2.status_code == 200
+    data2 = res2.get_json()
+    assert len(data2) == 1
+    assert data2[0]["id"] == 5
+
+
+# 22. GET /students (Sorting)
+def test_get_students_sorting(client):
+    res = client.get("/students?sort=grade&order=desc")
+    assert res.status_code == 200
+    data = res.get_json()
+    assert len(data) == 5
+    assert data[0]["grade"] == 20.0
+    assert data[4]["grade"] == 9.5

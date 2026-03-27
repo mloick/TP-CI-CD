@@ -93,7 +93,30 @@ def search_students():
 
 @routes.route("/students", methods=["GET"])
 def get_students():
-    return jsonify(data_store.students), 200
+    result = data_store.students.copy()
+
+    # Sorting
+    sort_by = request.args.get("sort")
+    order = request.args.get("order", "asc").lower()
+
+    if sort_by and len(result) > 0 and sort_by in result[0]:
+        reverse = order == "desc"
+        result.sort(key=lambda x: x[sort_by], reverse=reverse)
+
+    # Pagination
+    page = request.args.get("page", type=int)
+    limit = request.args.get("limit", type=int)
+
+    if page is not None and limit is not None:
+        if page < 1:
+            page = 1
+        if limit < 1:
+            limit = 10
+        start = (page - 1) * limit
+        end = start + limit
+        result = result[start:end]
+
+    return jsonify(result), 200
 
 
 @routes.route("/students/<id>", methods=["GET"])
