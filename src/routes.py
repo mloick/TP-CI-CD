@@ -147,7 +147,7 @@ def create_student():
     }
     data_store.students.append(new_student)
     data_store.student_id_counter += 1
-    return jsonify(new_student), 200
+    return jsonify(new_student), 201
 
 
 @routes.route("/students/<id>", methods=["PUT"])
